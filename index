@@ -1,342 +1,341 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kompas Interaktif 8 Mata Angin</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kompas Interaktif 8 Arah Mata Angin</title>
 <style>
 * { box-sizing: border-box; }
 
 body {
-    margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: white;
-    background: linear-gradient(135deg, #020617, #082f49, #312e81);
-    min-height: 100vh;
-    overflow-x: hidden;
+  margin: 0;
+  min-height: 100vh;
+  padding: 20px 14px;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: linear-gradient(135deg,#020617,#075985,#312e81);
 }
 
-.font-game { font-family: 'Fredoka', cursive; }
-
-.glass {
-    background: rgba(15, 23, 42, .78);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(125, 211, 252, .25);
-}
+h1 { color: #fde68a; font-size: 25px; }
+p { line-height: 1.6; }
 
 .compass {
-    width: min(78vw, 360px);
-    aspect-ratio: 1;
-    position: relative;
-    border-radius: 50%;
-    border: 4px solid rgba(56,189,248,.65);
-    background: radial-gradient(circle, #164e63 0%, #0f172a 72%);
-    box-shadow: 0 0 25px #0284c766, inset 0 0 25px #0ea5e955;
-    touch-action: none;
-}
-
-.compass:before {
-    content: "";
-    position: absolute;
-    inset: 8%;
-    border-radius: 50%;
-    border: 1px dashed rgba(125,211,252,.6);
-}
-
-.compass:after {
-    content: "";
-    position: absolute;
-    inset: 18%;
-    border-radius: 50%;
-    border: 1px solid rgba(251,191,36,.4);
+  width: min(86vw,340px);
+  aspect-ratio: 1;
+  margin: 25px auto;
+  position: relative;
+  border: 4px solid #38bdf8;
+  border-radius: 50%;
+  background: radial-gradient(circle,#164e63,#0f172a 72%);
+  box-shadow: 0 0 25px #0ea5e9;
+  touch-action: none;
 }
 
 .direction {
-    position: absolute;
-    z-index: 5;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 43px;
-    height: 43px;
-    border-radius: 12px;
-    background: #1e293b;
-    border: 1px solid #38bdf8;
-    color: #bae6fd;
-    font-family: 'Fredoka', cursive;
-    font-weight: 700;
-    cursor: pointer;
-    transition: .2s;
-    touch-action: manipulation;
+  position: absolute;
+  z-index: 3;
+  width: 43px;
+  height: 43px;
+  border-radius: 12px;
+  border: 1px solid #7dd3fc;
+  background: #1e293b;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.direction small {
-    font-size: 9px;
-    font-weight: 400;
+.direction small { font-size: 10px; }
+
+.direction.active {
+  background: #f59e0b;
+  color: #111827;
+  box-shadow: 0 0 12px #fbbf24;
 }
 
-.direction:hover, .direction.selected {
-    background: #f59e0b;
-    color: white;
-    border-color: #fde68a;
-    transform: scale(1.08);
-    box-shadow: 0 0 16px #f59e0b88;
-}
-
-.north { top: 4%; left: 50%; transform: translateX(-50%); background:#e11d48; color:white; }
-.north:hover, .north.selected { transform: translateX(-50%) scale(1.08); }
-.east { right: 4%; top: 50%; transform: translateY(-50%); background:#f59e0b; color:#111827; }
-.east:hover, .east.selected { transform: translateY(-50%) scale(1.08); }
-.south { bottom: 4%; left: 50%; transform: translateX(-50%); background:#0284c7; color:white; }
-.south:hover, .south.selected { transform: translateX(-50%) scale(1.08); }
-.west { left: 4%; top: 50%; transform: translateY(-50%); background:#059669; color:white; }
-.west:hover, .west.selected { transform: translateY(-50%) scale(1.08); }
-
-.northeast { top: 17%; right: 17%; }
-.southeast { bottom: 17%; right: 17%; }
-.southwest { bottom: 17%; left: 17%; }
-.northwest { top: 17%; left: 17%; }
+.n { top: 3%; left: 50%; transform: translateX(-50%); }
+.ne { top: 17%; right: 17%; }
+.e { top: 50%; right: 3%; transform: translateY(-50%); }
+.se { bottom: 17%; right: 17%; }
+.s { bottom: 3%; left: 50%; transform: translateX(-50%); }
+.sw { bottom: 17%; left: 17%; }
+.w { top: 50%; left: 3%; transform: translateY(-50%); }
+.nw { top: 17%; left: 17%; }
 
 .needle {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3;
-    pointer-events: none;
-    transition: transform .25s ease;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: transform .2s;
+  z-index: 2;
 }
 
-.needle-shape {
-    height: 64%;
-    width: 0;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-bottom: 32% solid transparent;
-    position: relative;
+.arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 13px solid transparent;
+  border-right: 13px solid transparent;
 }
 
-.needle-top {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-bottom: 105px solid #fb7185;
-    top: 0;
-    left: -12px;
-    filter: drop-shadow(0 0 5px #fb7185);
+.arrow.red {
+  border-bottom: 105px solid #fb7185;
+  transform: translateY(-52px);
+  filter: drop-shadow(0 0 5px #fb7185);
 }
 
-.needle-bottom {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-top: 105px solid #38bdf8;
-    bottom: 0;
-    left: -12px;
+.arrow.blue {
+  border-top: 105px solid #38bdf8;
+  transform: translateY(52px);
 }
 
-.hub {
-    position: absolute;
-    z-index: 8;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #fef3c7, #f59e0b, #92400e);
-    border: 3px solid #0f172a;
-    box-shadow: 0 0 12px #f59e0b88;
-    pointer-events: none;
+.center {
+  position: absolute;
+  z-index: 4;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #fbbf24;
+  border: 4px solid #0f172a;
 }
 
-.quick-btn {
-    min-width: 0;
-    padding: 9px 3px;
-    border-radius: 10px;
-    background: rgba(15,23,42,.85);
-    border: 1px solid #334155;
-    color: #bae6fd;
-    font-size: 11px;
-    font-weight: 700;
-    transition: .2s;
+.info {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 18px;
+  border: 1px solid #38bdf8;
+  border-radius: 18px;
+  background: #0f172acc;
 }
 
-.quick-btn:hover, .quick-btn.selected {
-    background: #0369a1;
-    color: white;
-    border-color: #7dd3fc;
+#name { font-size: 27px; color: #fde68a; }
+#degree { color: #7dd3fc; font-weight: bold; }
+
+.buttons {
+  max-width: 600px;
+  margin: 15px auto;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
 }
 
-@media (max-width: 400px) {
-    .direction { width: 37px; height: 37px; }
-    .direction small { font-size: 8px; }
-    .northeast, .northwest { top: 18%; }
-    .southeast, .southwest { bottom: 18%; }
-    .compass { width: min(82vw, 320px); }
+.buttons button, .tools button, #helpClose {
+  padding: 10px 5px;
+  border: 1px solid #38bdf8;
+  border-radius: 10px;
+  background: #0f172a;
+  color: white;
+  cursor: pointer;
+}
+
+.tools {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tools button { padding: 10px 14px; }
+
+#help {
+  display: none;
+  max-width: 500px;
+  margin: 15px auto;
+  padding: 15px;
+  border-radius: 14px;
+  background: #172554;
+}
+
+@media(max-width:380px) {
+  .direction { width: 36px; height: 36px; }
+  .arrow.red { border-bottom-width: 85px; }
+  .arrow.blue { border-top-width: 85px; }
+  .arrow.red { transform: translateY(-42px); }
+  .arrow.blue { transform: translateY(42px); }
+  .buttons button { font-size: 11px; }
 }
 </style>
 </head>
 
-<body class="px-3 py-4 sm:px-5">
+<body>
+<h1>🧭 Kompas Interaktif</h1>
+<p>Belajar Mengenal 8 Arah Mata Angin</p>
 
-<header class="max-w-4xl mx-auto flex items-center justify-between gap-2 mb-5">
-    <div class="glass rounded-2xl p-3 flex items-center gap-3">
-        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-300 to-amber-500 text-slate-900 flex items-center justify-center text-xl">
-            <i class="fa-solid fa-compass"></i>
-        </div>
-        <div>
-            <h1 class="font-game text-lg sm:text-2xl font-bold text-sky-200">
-                Kompas Interaktif
-            </h1>
-            <p class="text-xs text-slate-300">Belajar 8 Arah Mata Angin</p>
-        </div>
-    </div>
+<div class="tools">
+  <button id="zoomIn">🔍 Perbesar</button>
+  <button id="zoomOut">🔎 Perkecil</button>
+  <button id="sound">🔊 Suara ON</button>
+  <button id="helpBtn">❔ Petunjuk</button>
+</div>
 
-    <div class="flex gap-1.5">
-        <button id="zoomIn" aria-label="Perbesar kompas" class="glass rounded-xl w-10 h-10">
-            <i class="fa-solid fa-magnifying-glass-plus"></i>
-        </button>
-        <button id="zoomOut" aria-label="Perkecil kompas" class="glass rounded-xl w-10 h-10">
-            <i class="fa-solid fa-magnifying-glass-minus"></i>
-        </button>
-        <button id="soundBtn" aria-label="Aktifkan atau matikan suara" class="glass rounded-xl w-10 h-10 text-emerald-300">
-            <i id="soundIcon" class="fa-solid fa-volume-high"></i>
-        </button>
-        <button id="helpBtn" aria-label="Petunjuk penggunaan" class="glass rounded-xl w-10 h-10 text-amber-300">
-            <i class="fa-solid fa-circle-question"></i>
-        </button>
-    </div>
-</header>
+<div id="help">
+  <b>Cara Menggunakan Kompas</b>
+  <p>Tekan tombol arah mata angin atau geser jarum menggunakan jari. Amati nama arah dan besar sudutnya.</p>
+  <button id="helpClose">Tutup</button>
+</div>
 
-<main class="max-w-4xl mx-auto flex flex-col items-center">
+<div class="compass" id="compass">
+  <button class="direction n" data-key="N">U<small>0°</small></button>
+  <button class="direction ne" data-key="NE">TL<small>45°</small></button>
+  <button class="direction e" data-key="E">T<small>90°</small></button>
+  <button class="direction se" data-key="SE">TG<small>135°</small></button>
+  <button class="direction s" data-key="S">S<small>180°</small></button>
+  <button class="direction sw" data-key="SW">BD<small>225°</small></button>
+  <button class="direction w" data-key="W">B<small>270°</small></button>
+  <button class="direction nw" data-key="NW">BL<small>315°</small></button>
 
-    <div class="text-center mb-4">
-        <h2 class="font-game text-xl sm:text-2xl font-bold text-amber-300">
-            Jelajahi Arah Mata Angin!
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-300 mt-1">
-            Tekan huruf arah atau geser jarum kompas.
-        </p>
-    </div>
+  <div class="needle" id="needle">
+    <div class="arrow red"></div>
+    <div class="arrow blue"></div>
+  </div>
+  <div class="center"></div>
+</div>
 
-    <div id="compassWrapper" class="my-3 transition-transform duration-200">
-        <div id="compass" class="compass">
+<div class="info">
+  <div>Arah yang dipilih</div>
+  <div id="name">Utara</div>
+  <div id="degree">0° / 360°</div>
+  <p id="desc">Utara merupakan patokan utama untuk menentukan arah pada peta.</p>
+</div>
 
-            <button class="direction north" data-dir="N" aria-label="Utara">
-                U<small>0°</small>
-            </button>
-            <button class="direction northeast" data-dir="NE" aria-label="Timur Laut">
-                TL<small>45°</small>
-            </button>
-            <button class="direction east" data-dir="E" aria-label="Timur">
-                T<small>90°</small>
-            </button>
-            <button class="direction southeast" data-dir="SE" aria-label="Tenggara">
-                TG<small>135°</small>
-            </button>
-            <button class="direction south" data-dir="S" aria-label="Selatan">
-                S<small>180°</small>
-            </button>
-            <button class="direction southwest" data-dir="SW" aria-label="Barat Daya">
-                BD<small>225°</small>
-            </button>
-            <button class="direction west" data-dir="W" aria-label="Barat">
-                B<small>270°</small>
-            </button>
-            <button class="direction northwest" data-dir="NW" aria-label="Barat Laut">
-                BL<small>315°</small>
-            </button>
+<p><b>Pilih Arah Mata Angin</b></p>
+<div class="buttons">
+  <button data-key="N">Utara<br>0°</button>
+  <button data-key="NE">Timur Laut<br>45°</button>
+  <button data-key="E">Timur<br>90°</button>
+  <button data-key="SE">Tenggara<br>135°</button>
+  <button data-key="S">Selatan<br>180°</button>
+  <button data-key="SW">Barat Daya<br>225°</button>
+  <button data-key="W">Barat<br>270°</button>
+  <button data-key="NW">Barat Laut<br>315°</button>
+</div>
 
-            <div id="needle" class="needle">
-                <div class="needle-shape">
-                    <div class="needle-top"></div>
-                    <div class="needle-bottom"></div>
-                </div>
-            </div>
-            <div class="hub"></div>
-        </div>
-    </div>
+<script>
+const directions = {
+  N:  {name:"Utara",code:"U",deg:0,desc:"Utara menjadi patokan utama dalam membaca peta dan menentukan arah."},
+  NE: {name:"Timur Laut",code:"TL",deg:45,desc:"Timur Laut terletak di antara Utara dan Timur."},
+  E:  {name:"Timur",code:"T",deg:90,desc:"Timur adalah arah tempat Matahari tampak terbit."},
+  SE: {name:"Tenggara",code:"TG",deg:135,desc:"Tenggara terletak di antara Timur dan Selatan."},
+  S:  {name:"Selatan",code:"S",deg:180,desc:"Selatan berlawanan arah dengan Utara."},
+  SW: {name:"Barat Daya",code:"BD",deg:225,desc:"Barat Daya terletak di antara Selatan dan Barat."},
+  W:  {name:"Barat",code:"B",deg:270,desc:"Barat adalah arah tempat Matahari tampak terbenam."},
+  NW: {name:"Barat Laut",code:"BL",deg:315,desc:"Barat Laut terletak di antara Barat dan Utara."}
+};
 
-    <p class="text-center text-xs text-slate-300 mt-3 mb-5">
-        <i class="fa-solid fa-hand-pointer text-amber-300 mr-1"></i>
-        Arah utara dimulai dari 0°, lalu bertambah searah jarum jam.
-    </p>
+const compass = document.getElementById("compass");
+const needle = document.getElementById("needle");
+let angle = 0;
+let zoom = 1;
+let soundOn = true;
+let dragging = false;
 
-    <section class="glass rounded-2xl p-4 w-full mb-4">
-        <div class="flex items-center gap-3 mb-3">
-            <div id="badge" class="w-14 h-14 rounded-2xl bg-rose-600 flex items-center justify-center font-game text-3xl font-bold shrink-0">
-                U
-            </div>
-            <div>
-                <p class="text-xs text-amber-300 font-bold">
-                    <i class="fa-solid fa-location-arrow mr-1"></i>
-                    ARAH YANG DIPILIH
-                </p>
-                <h2 id="directionName" class="font-game text-2xl font-bold">Utara</h2>
-                <p id="degree" class="text-sm text-sky-200">0°</p>
-            </div>
-        </div>
-        <div class="rounded-xl bg-slate-950/60 border border-slate-700 p-3">
-            <p id="description" class="text-sm text-slate-200 leading-relaxed">
-                Utara merupakan arah yang menjadi patokan utama pada peta dan kompas.
-            </p>
-        </div>
-    </section>
+function selectDirection(key, speak = true) {
+  const d = directions[key];
+  if (!d) return;
 
-    <section class="w-full mb-5">
-        <h3 class="font-game font-bold text-lg text-sky-200 mb-2">
-            Pilih Arah Mata Angin
-        </h3>
-        <div class="grid grid-cols-4 sm:grid-cols-8 gap-2" id="quickDirections">
-            <button class="quick-btn" data-dir="N">Utara<br>0°</button>
-            <button class="quick-btn" data-dir="NE">Timur Laut<br>45°</button>
-            <button class="quick-btn" data-dir="E">Timur<br>90°</button>
-            <button class="quick-btn" data-dir="SE">Tenggara<br>135°</button>
-            <button class="quick-btn" data-dir="S">Selatan<br>180°</button>
-            <button class="quick-btn" data-dir="SW">Barat Daya<br>225°</button>
-            <button class="quick-btn" data-dir="W">Barat<br>270°</button>
-            <button class="quick-btn" data-dir="NW">Barat Laut<br>315°</button>
-        </div>
-    </section>
+  angle = d.deg;
+  needle.style.transform = `rotate(${angle}deg)`;
 
-    <section class="glass rounded-2xl p-4 w-full mb-5">
-        <h3 class="font-game text-lg font-bold text-amber-300 mb-2">
-            <i class="fa-solid fa-lightbulb mr-2"></i>Tahukah Kamu?
-        </h3>
-        <ul class="text-sm text-slate-200 space-y-2">
-            <li>🧭 Ada 8 arah mata angin yang dipelajari pada kompas ini.</li>
-            <li>🌅 Matahari tampak terbit di sebelah timur.</li>
-            <li>🌇 Matahari tampak terbenam di sebelah barat.</li>
-            <li>🗺️ Arah mata angin membantu kita membaca peta dan menentukan letak suatu tempat.</li>
-        </ul>
-    </section>
+  document.getElementById("name").textContent = d.name;
+  document.getElementById("degree").textContent =
+    d.deg === 0 ? "0° / 360°" : d.deg + "°";
+  document.getElementById("desc").textContent = d.desc;
 
-</main>
+  document.querySelectorAll("[data-key]").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.key === key);
+  });
 
-<div id="helpModal" class="hidden fixed inset-0 z-50 bg-black/70 items-center justify-center p-4">
-    <div class="glass rounded-3xl p-6 max-w-md w-full">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="font-game text-xl font-bold text-amber-300">
-                Cara Menggunakan Kompas
-            </h2>
-            <button id="closeHelp" aria-label="Tutup petunjuk" class="text-xl">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        <ol class="list-decimal pl-5 space-y-3 text-sm text-slate-200">
-            <li>Tekan tombol arah mata angin untuk melihat nama, sudut, dan keterangannya.</li>
-            <li>Geser jarum kompas menggunakan jari atau mouse untuk mencoba arah yang berbeda.</li>
-            <li>Gunakan tombol kaca pembesar untuk memperbesar atau memperkecil kompas.</li>
-            <li>Aktifkan suara untuk mendengarkan nama arah mata angin.</li>
-            <li>Ingat bahwa sudut bertambah searah jarum jam, dengan utara sebagai 0°.</li>
-        </ol
+  if (speak && soundOn && "speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+    const msg = new SpeechSynthesisUtterance(d.name);
+    msg.lang = "id-ID";
+    window.speechSynthesis.speak(msg);
+  }
+}
+
+document.querySelectorAll("[data-key]").forEach(btn => {
+  btn.addEventListener("click", () => selectDirection(btn.dataset.key));
+});
+
+document.getElementById("zoomIn").onclick = () => {
+  zoom = Math.min(zoom + 0.1, 1.2);
+  compass.style.transform = `scale(${zoom})`;
+};
+
+document.getElementById("zoomOut").onclick = () => {
+  zoom = Math.max(zoom - 0.1, 0.8);
+  compass.style.transform = `scale(${zoom})`;
+};
+
+document.getElementById("sound").onclick = function() {
+  soundOn = !soundOn;
+  this.textContent = soundOn ? "🔊 Suara ON" : "🔇 Suara OFF";
+  if (!soundOn && "speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+};
+
+document.getElementById("helpBtn").onclick = () => {
+  document.getElementById("help").style.display = "block";
+};
+
+document.getElementById("helpClose").onclick = () => {
+  document.getElementById("help").style.display = "none";
+};
+
+function pointerAngle(event) {
+  const r = compass.getBoundingClientRect();
+  const x = event.clientX - (r.left + r.width / 2);
+  const y = event.clientY - (r.top + r.height / 2);
+  return (Math.atan2(x, -y) * 180 / Math.PI + 360) % 360;
+}
+
+compass.addEventListener("pointerdown", event => {
+  if (event.target.closest("button")) return;
+  dragging = true;
+  compass.setPointerCapture(event.pointerId);
+  angle = pointerAngle(event);
+  needle.style.transform = `rotate(${angle}deg)`;
+});
+
+compass.addEventListener("pointermove", event => {
+  if (!dragging) return;
+  angle = pointerAngle(event);
+  needle.style.transform = `rotate(${angle}deg)`;
+});
+
+function stopDrag() {
+  if (!dragging) return;
+  dragging = false;
+
+  const keys = Object.keys(directions);
+  let nearest = "N";
+  let difference = Infinity;
+
+  keys.forEach(key => {
+    let diff = Math.abs(angle - directions[key].deg);
+    diff = Math.min(diff, 360 - diff);
+    if (diff < difference) {
+      difference = diff;
+      nearest = key;
+    }
+  });
+
+  selectDirection(nearest);
+}
+
+compass.addEventListener("pointerup", stopDrag);
+compass.addEventListener("pointercancel", stopDrag);
+
+selectDirection("N", false);
+</script>
+</body>
+</html>
